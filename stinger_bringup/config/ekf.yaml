@@ -106,10 +106,10 @@ ekf_filter_node:
 
         ### STUDENT CODE HERE
         imu0_config: [false, false, false,
-                      true,  true,  true,
+                      false, false, true,
                       false, false, false,
-                      true,  true,  true,
-                      false,  false,  false]
+                      false, false, true,
+                      false, false, false]
         ### END STUDENT CODE
 
         # TODO: 4.4.c Add odometry from NavSat transform

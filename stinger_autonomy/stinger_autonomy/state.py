@@ -75,7 +75,8 @@ class StateMachine(Node):
         self.get_logger().info(f"Red: {left_gate_location}, Green: {right_gate_location}")
 
         if left_gate_location < 0 or right_gate_location < 0:
-            return
+            cmd_vel.angular.z = 0.1
+            return cmd_vel
         
         deg_per_pixel = self.hfov / self.image_width
 
@@ -96,7 +97,11 @@ class StateMachine(Node):
 
         # TODO: 7.1.a Transition condition to move out of Search State
         ### STUDENT CODE HERE
-
+        cmd_vel.angular.z = self.angular_correction_factor * turn_angle
+        if abs(cmd_vel.angular.z) > 0.1:
+            cmd_vel.angular.z = np.sign(cmd_vel.angular.z) * 0.1
+        if abs(turn_angle) < 0.1:
+            self.state = State.Approaching
         ### END STUDENT CODE
         return cmd_vel
     
@@ -105,8 +110,9 @@ class StateMachine(Node):
         left_gate_location = self.current_gate_pos.red_x
         right_gate_location = self.current_gate_pos.green_x
 
-        if left_gate_location is None or right_gate_location is None:
-            return
+        if left_gate_location < 0 or right_gate_location < 0:
+            self.state = State.Searching
+            return cmd_vel
         
         deg_per_pixel = self.hfov / self.image_width
 
@@ -127,7 +133,9 @@ class StateMachine(Node):
 
         # TODO: 7.1.b Transition condition to move out of Approach State
         ### STUDENT CODE HERE
-
+        if gate_fov_bound > 0.6:
+            self.pre_push_time = self.get_clock().now()
+            self.state = State.Passing_Through
         ### END STUDENT CODE
 
         return cmd_vel

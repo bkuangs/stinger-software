@@ -92,8 +92,8 @@ class ImuRepublisher(Node):
         msg_base_link.linear_acceleration.z = acceleration_world[2]
 
         msg_base_link.angular_velocity.x = angular_velocity[0]
-        msg_base_link.angular_velocity.x = angular_velocity[1]
-        msg_base_link.angular_velocity.x = angular_velocity[2]
+        msg_base_link.angular_velocity.y = angular_velocity[1]
+        msg_base_link.angular_velocity.z = angular_velocity[2]
         self.imu_pub.publish(msg_base_link)
 
 def main(args=None):
